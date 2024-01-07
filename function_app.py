@@ -2,7 +2,7 @@ import azure.functions as func
 import json
 import subprocess
 
-app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
+app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
 @app.route(route="ML")
 def ML(req: func.HttpRequest) -> func.HttpResponse:
