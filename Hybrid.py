@@ -12,9 +12,9 @@ from scipy.sparse import csr_matrix
 
 
 # Load the datasets
-books_df = pd.read_csv('ML/Datasets/Books.csv', encoding='ISO-8859-1', low_memory=False)
-ratings_df = pd.read_csv('ML/Datasets/Ratings.csv', encoding='ISO-8859-1')
-users_df = pd.read_csv('ML/Datasets/Users.csv', encoding='ISO-8859-1')
+books_df = pd.read_csv('Datasets/Books.csv', encoding='ISO-8859-1', low_memory=False)
+ratings_df = pd.read_csv('Datasets/Ratings.csv', encoding='ISO-8859-1')
+users_df = pd.read_csv('Datasets/Users.csv', encoding='ISO-8859-1')
 
 ratings_df['User-ID'] = ratings_df['User-ID'].astype('int32')
 ratings_df['Book-Rating'] = ratings_df['Book-Rating'].astype('int32')

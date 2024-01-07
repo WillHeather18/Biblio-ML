@@ -1,25 +1,28 @@
 import azure.functions as func
-import logging
+import json
+import subprocess
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
 
 @app.route(route="ML")
 def ML(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger function processed a request.')
-
-    name = req.params.get('name')
-    if not name:
-        try:
+    try:
+        # Parse input data from HTTP request
+        ratings = req.params.get('ratings')
+        num_recommendations = req.params.get('num')
+        if not ratings or not num_recommendations:
             req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            name = req_body.get('name')
+            ratings = req_body.get('ratings', ratings)
+            num_recommendations = req_body.get('num', num_recommendations)
 
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
-    else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
-        )
+        # Convert input to JSON string
+        python_file = "Hybrid.py"
+
+        result = subprocess.run(["python", python_file, ratings, num_recommendations], capture_output=True, text=True)
+        if result.returncode != 0:
+            return func.HttpResponse(result.stderr, status_code=400)
+
+        # Return the recommendations as a JSON response
+        return func.HttpResponse(result.stdout, status_code=200)
+    except Exception as e:
+        return func.HttpResponse(str(e), status_code=400)
